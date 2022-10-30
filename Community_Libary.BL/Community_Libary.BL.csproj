@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Community_Libary.API\Community_Libary.API.csproj" />
+    <ProjectReference Include="..\Community_Libary.DAL\Community_Libary.DAL.csproj" />
+  </ItemGroup>
+
+</Project>
