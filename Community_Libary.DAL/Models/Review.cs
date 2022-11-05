@@ -7,19 +7,15 @@ using System.Threading.Tasks;
 
 namespace Community_Libary.DAL.Models
 {
-    public class BookReviews
+    public class Review
     {
-        /*jó*/
-
         public int Id { get; set; }
-        public string BookReview { get; set; }
 
-        public virtual Books Book { get; set; }
-        public int? BookId { get; set; }
+        public int? ReviewedId { get; set; }
+        public int? ReviewerId { get; set; }
 
         public virtual Users Reviewer { get; set; }
-        public int? ReviewerId { get; set; }
-        public DateTime CreatedTimestamp { get; set; }
+        public virtual Users Reviewed { get; set; }
 
     }
 }

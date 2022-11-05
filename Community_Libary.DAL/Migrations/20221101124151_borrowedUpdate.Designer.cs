@@ -4,6 +4,7 @@ using Community_Libary.DAL.DATA;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Community_Libary.DAL.Migrations
 {
     [DbContext(typeof(Community_LibaryDbContext))]
-    partial class Community_LibaryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221101124151_borrowedUpdate")]
+    partial class borrowedUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,9 +32,6 @@ namespace Community_Libary.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("BookId")
-                        .HasColumnType("int");
-
                     b.Property<string>("BookReview")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -40,14 +39,12 @@ namespace Community_Libary.DAL.Migrations
                     b.Property<DateTime>("CreatedTimestamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ReviewerId")
+                    b.Property<int?>("UsersId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("ReviewerId");
+                    b.HasIndex("UsersId");
 
                     b.ToTable("BookReviews");
                 });
@@ -84,45 +81,22 @@ namespace Community_Libary.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("BookId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BorrowerId")
+                    b.Property<int>("BookId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedTimestamp")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UsersId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BookId");
 
-                    b.HasIndex("BorrowerId");
+                    b.HasIndex("UsersId");
 
                     b.ToTable("Borrowed");
-                });
-
-            modelBuilder.Entity("Community_Libary.DAL.Models.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("ReviewedId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ReviewerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReviewedId");
-
-                    b.HasIndex("ReviewerId");
-
-                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Community_Libary.DAL.Models.UserReviews", b =>
@@ -136,12 +110,12 @@ namespace Community_Libary.DAL.Migrations
                     b.Property<bool>("IsRecommend")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ReviewId")
+                    b.Property<int>("reviewerId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReviewId");
+                    b.HasIndex("reviewerId");
 
                     b.ToTable("UserReviews");
                 });
@@ -177,17 +151,9 @@ namespace Community_Libary.DAL.Migrations
 
             modelBuilder.Entity("Community_Libary.DAL.Models.BookReviews", b =>
                 {
-                    b.HasOne("Community_Libary.DAL.Models.Books", "Book")
-                        .WithMany("ReviewBooks")
-                        .HasForeignKey("BookId");
-
-                    b.HasOne("Community_Libary.DAL.Models.Users", "Reviewer")
-                        .WithMany("BookReviews")
-                        .HasForeignKey("ReviewerId");
-
-                    b.Navigation("Book");
-
-                    b.Navigation("Reviewer");
+                    b.HasOne("Community_Libary.DAL.Models.Users", null)
+                        .WithMany("BookReviewer")
+                        .HasForeignKey("UsersId");
                 });
 
             modelBuilder.Entity("Community_Libary.DAL.Models.Books", b =>
@@ -204,60 +170,36 @@ namespace Community_Libary.DAL.Migrations
             modelBuilder.Entity("Community_Libary.DAL.Models.Borrowed", b =>
                 {
                     b.HasOne("Community_Libary.DAL.Models.Books", "Book")
-                        .WithMany("BorrowedBooks")
-                        .HasForeignKey("BookId");
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Community_Libary.DAL.Models.Users", "borrower")
-                        .WithMany("Borrowers")
-                        .HasForeignKey("BorrowerId");
+                    b.HasOne("Community_Libary.DAL.Models.Users", null)
+                        .WithMany("Borrower")
+                        .HasForeignKey("UsersId");
 
                     b.Navigation("Book");
-
-                    b.Navigation("borrower");
-                });
-
-            modelBuilder.Entity("Community_Libary.DAL.Models.Review", b =>
-                {
-                    b.HasOne("Community_Libary.DAL.Models.Users", "Reviewed")
-                        .WithMany("Revieweds")
-                        .HasForeignKey("ReviewedId");
-
-                    b.HasOne("Community_Libary.DAL.Models.Users", "Reviewer")
-                        .WithMany("Reviewers")
-                        .HasForeignKey("ReviewerId");
-
-                    b.Navigation("Reviewed");
-
-                    b.Navigation("Reviewer");
                 });
 
             modelBuilder.Entity("Community_Libary.DAL.Models.UserReviews", b =>
                 {
-                    b.HasOne("Community_Libary.DAL.Models.Review", "Review")
-                        .WithMany()
-                        .HasForeignKey("ReviewId")
+                    b.HasOne("Community_Libary.DAL.Models.Users", "reviewer")
+                        .WithMany("UserReviewer")
+                        .HasForeignKey("reviewerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Review");
-                });
-
-            modelBuilder.Entity("Community_Libary.DAL.Models.Books", b =>
-                {
-                    b.Navigation("BorrowedBooks");
-
-                    b.Navigation("ReviewBooks");
+                    b.Navigation("reviewer");
                 });
 
             modelBuilder.Entity("Community_Libary.DAL.Models.Users", b =>
                 {
-                    b.Navigation("BookReviews");
+                    b.Navigation("BookReviewer");
 
-                    b.Navigation("Borrowers");
+                    b.Navigation("Borrower");
 
-                    b.Navigation("Revieweds");
-
-                    b.Navigation("Reviewers");
+                    b.Navigation("UserReviewer");
                 });
 #pragma warning restore 612, 618
         }

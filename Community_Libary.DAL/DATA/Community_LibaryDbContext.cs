@@ -15,6 +15,7 @@ namespace Community_Libary.DAL.DATA
         public DbSet<Borrowed> Borrowed { get; set; }
         public DbSet<BookReviews> BookReviews { get; set; }
         public DbSet<UserReviews> UserReviews { get; set; }
+        public DbSet<Review> Reviews { get; set; }
         public Community_LibaryDbContext(DbContextOptions<Community_LibaryDbContext> options) : base(options)
         {
 

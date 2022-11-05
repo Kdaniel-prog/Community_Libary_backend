@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Community_Libary.DAL.Migrations
 {
     [DbContext(typeof(Community_LibaryDbContext))]
-    [Migration("20221002183852_init")]
+    [Migration("20221101122051_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,19 +32,19 @@ namespace Community_Libary.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("BookReview")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedTimestamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("userId")
+                    b.Property<int?>("UsersId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("UsersId");
 
                     b.ToTable("BookReviews");
                 });
@@ -84,17 +84,12 @@ namespace Community_Libary.DAL.Migrations
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
-                    b.Property<int>("BorrowerId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedTimestamp")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BookId");
-
-                    b.HasIndex("BorrowerId");
 
                     b.ToTable("Borrowed");
                 });
@@ -110,17 +105,12 @@ namespace Community_Libary.DAL.Migrations
                     b.Property<bool>("IsRecommend")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ReviewedId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReviewerId")
+                    b.Property<int>("reviewerId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReviewedId");
-
-                    b.HasIndex("ReviewerId");
+                    b.HasIndex("reviewerId");
 
                     b.ToTable("UserReviews");
                 });
@@ -134,15 +124,19 @@ namespace Community_Libary.DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -152,13 +146,9 @@ namespace Community_Libary.DAL.Migrations
 
             modelBuilder.Entity("Community_Libary.DAL.Models.BookReviews", b =>
                 {
-                    b.HasOne("Community_Libary.DAL.Models.Users", "user")
-                        .WithMany()
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("user");
+                    b.HasOne("Community_Libary.DAL.Models.Users", null)
+                        .WithMany("BookReviewer")
+                        .HasForeignKey("UsersId");
                 });
 
             modelBuilder.Entity("Community_Libary.DAL.Models.Books", b =>
@@ -174,40 +164,31 @@ namespace Community_Libary.DAL.Migrations
 
             modelBuilder.Entity("Community_Libary.DAL.Models.Borrowed", b =>
                 {
-                    b.HasOne("Community_Libary.DAL.Models.Books", "Book")
+                    b.HasOne("Community_Libary.DAL.Models.Users", "Book")
                         .WithMany()
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Community_Libary.DAL.Models.Users", "Borrower")
-                        .WithMany()
-                        .HasForeignKey("BorrowerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Book");
-
-                    b.Navigation("Borrower");
                 });
 
             modelBuilder.Entity("Community_Libary.DAL.Models.UserReviews", b =>
                 {
-                    b.HasOne("Community_Libary.DAL.Models.Users", "Reviewed")
-                        .WithMany()
-                        .HasForeignKey("ReviewedId")
+                    b.HasOne("Community_Libary.DAL.Models.Users", "reviewer")
+                        .WithMany("UserReviewer")
+                        .HasForeignKey("reviewerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Community_Libary.DAL.Models.Users", "Reviewer")
-                        .WithMany()
-                        .HasForeignKey("ReviewerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("reviewer");
+                });
 
-                    b.Navigation("Reviewed");
+            modelBuilder.Entity("Community_Libary.DAL.Models.Users", b =>
+                {
+                    b.Navigation("BookReviewer");
 
-                    b.Navigation("Reviewer");
+                    b.Navigation("UserReviewer");
                 });
 #pragma warning restore 612, 618
         }
