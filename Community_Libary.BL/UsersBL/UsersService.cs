@@ -49,14 +49,6 @@ namespace Community_Libary.BL.UsersBL
             var newItem = new Users(registerUserDTO.username, encryptedResult, registerUserDTO.Email, registerUserDTO.FullName);
             _context.Users.Add(newItem);
             await _context.SaveChangesAsync();
-
-            byte[] bytesToBeDecrypted = Convert.FromBase64String(encryptedResult);
-            byte[] passwordBytesdecrypt = Encoding.UTF8.GetBytes("Password");
-            passwordBytesdecrypt = SHA256.Create().ComputeHash(passwordBytesdecrypt);
-
-            byte[] bytesDecrypted = AES_Decrypt(bytesToBeDecrypted, passwordBytes);
-
-            string decryptedResult = Encoding.UTF8.GetString(bytesDecrypted);
         }
 
         public byte[] AES_Encrypt(byte[] bytesToBeEncrypted, byte[] passwordBytes)
@@ -124,9 +116,41 @@ namespace Community_Libary.BL.UsersBL
             return decryptedBytes;
         }
 
-        public Task<Users> loginUserAsync(LoginUserDTO user)
+        public async Task<LoginUserInfoDTO> loginUserAsync(LoginUserDTO user)
         {
-            var user  = _context.Users.Select(u => u).Where(u => u.Username == user.)
+            var userList = await _context.Users.Select(u => u).ToListAsync();
+            var userPassword = userList.Where(u => u.Username.ToLower().Equals(user.username.ToLower())).Select(u => u.Password).First();
+
+            if (userPassword == null)
+            {
+                throw new ArgumentNullException("wrong username");
+            }
+
+            byte[] passwordBytes = Encoding.UTF8.GetBytes("Password");
+
+            // Hash the password with SHA256
+            passwordBytes = SHA256.Create().ComputeHash(passwordBytes);
+
+            byte[] bytesToBeDecrypted = Convert.FromBase64String(userPassword);
+            byte[] passwordBytesdecrypt = Encoding.UTF8.GetBytes("Password");
+            passwordBytesdecrypt = SHA256.Create().ComputeHash(passwordBytesdecrypt);
+
+            byte[] bytesDecrypted = AES_Decrypt(bytesToBeDecrypted, passwordBytes);
+
+            string decryptedResult = Encoding.UTF8.GetString(bytesDecrypted);
+            if(decryptedResult != user.password)
+            {
+                throw new ArgumentException("Wrong password");
+            }
+
+            LoginUserInfoDTO result = (LoginUserInfoDTO)userList.Where(u => u.Username.ToLower().Equals(user.username.ToLower())).Select(u => new LoginUserInfoDTO
+            {
+                username = u.Username,
+                Email = u.Email,
+                FullName = u.FullName,
+
+            }).First();
+            return result;
         }
     }
 }
