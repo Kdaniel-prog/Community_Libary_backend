@@ -8,7 +8,9 @@ namespace Community_Libary.API.UsersAPI
 {
     public interface IUsersService
     {
-        Task <List<UserDTO>> getAllUserAsync();
+        Task <List<LoginUserDTO>> getAllUserAsync();
+        Task<LoginUserInfoDTO> loginUserAsync(LoginUserDTO user);
+        Task registerUserAsync(RegisterUserDTO registerUserDTO);
        
     }
 }
