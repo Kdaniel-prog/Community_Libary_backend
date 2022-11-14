@@ -10,7 +10,6 @@ namespace Community_Libary.DAL.Models
     public class Books
     {
         /*jó*/
-
         public int Id { get; set; }
         public string? Title { get; set; }
         public string? Author { get; set; }

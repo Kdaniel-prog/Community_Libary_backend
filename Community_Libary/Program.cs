@@ -1,4 +1,8 @@
+using Community_Libary.API.BooksAPI;
+using Community_Libary.API.BorrowedAPI;
 using Community_Libary.API.UsersAPI;
+using Community_Libary.BL.BooksBL;
+using Community_Libary.BL.BorrowedBL;
 using Community_Libary.BL.UsersBL;
 using Community_Libary.DAL.DATA;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +25,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped<IBooksService, BooksService>();
+builder.Services.AddScoped<IBorrowedService, BorrowedService>();
 
 builder.Services.AddDbContext<Community_LibaryDbContext>(
     options => options.UseSqlServer(

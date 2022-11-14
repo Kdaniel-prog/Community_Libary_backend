@@ -9,6 +9,8 @@ namespace Community_Libary.API.UsersAPI
 {
     public class LoginUserInfoDTO
     {
+        public int id { get; set; } 
+
         [Required(ErrorMessage = "username is required")]
         public string username { get; set; }
 
