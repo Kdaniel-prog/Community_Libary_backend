@@ -30,5 +30,31 @@ namespace Community_Libary.WEB.Controllers
                 return StatusCode(400);
             }
         }
+        // GET: api/borrowed/Books
+        [HttpGet("Books")]
+        public async Task<ActionResult> BorrowedBooks(int borrowerID)
+        {
+            try
+            {
+                return StatusCode(200, await _borrowedService.getBorrowedBooksAsync(borrowerID));
+            }
+            catch
+            {
+                return StatusCode(400);
+            }
+        }
+        [HttpDelete("delete")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                await _borrowedService.DeleteBorrowBookAsync(id);
+                return StatusCode(200);
+            }
+            catch
+            {
+                return StatusCode(400);
+            }
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace Community_Libary.BL.BooksBL
         {
             var b = await _context.Books.FindAsync(id)
                     ?? throw new ObjectNotFoundException<Books>(id);
-            _context.Remove(b);
+            _context.Books.Remove(b);
             await _context.SaveChangesAsync();
         }
 
@@ -36,7 +36,8 @@ namespace Community_Libary.BL.BooksBL
                 Title = b.Title,
                 OwnerID = b.OwnerId,
                 OwnerUsername = b.Owner.Username,
-                Borrowed = _context.Borrowed.Include(bw => bw.Book).Where(bw => bw.BookId.Equals(b.Id)).First() == null ? false : true
+                Borrowed = _context.Borrowed.Include(bw => bw.Book).Where(bw => bw.BookId.Equals(b.Id)).First() == null ? false : true,
+                borrowerUsername = _context.Borrowed.Include(bw => bw.borrower).Where(bw => bw.BookId.Equals(b.Id)).Select(bw => bw.borrower.Username).First()
             }).ToListAsync();
             return listOfAvailableBooks;
         }
@@ -47,7 +48,8 @@ namespace Community_Libary.BL.BooksBL
                 Id = b.Id,
                 Author = b.Author,
                 Title = b.Title,
-                OwnerID = b.OwnerId
+                OwnerID = b.OwnerId,
+                borrowerUsername = _context.Borrowed.Include(bw => bw.borrower).Where(bw => bw.BookId.Equals(b.Id)).Select(bw => bw.borrower.Username).First()
             }).ToListAsync() ?? throw new ObjectNotFoundException<BookDTO>();
             return books;
 

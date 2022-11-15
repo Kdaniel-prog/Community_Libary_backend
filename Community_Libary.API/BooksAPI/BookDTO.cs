@@ -19,5 +19,7 @@ namespace Community_Libary.API.BooksAPI
 
         [Required(ErrorMessage = "Owner Username is required")]
         public int OwnerID { get; set; }
+
+        public string? borrowerUsername { get; set; }
     }
 }

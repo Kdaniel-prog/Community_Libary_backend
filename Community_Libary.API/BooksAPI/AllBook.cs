@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Community_Libary.API.BookReviewAPI;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -23,6 +24,9 @@ namespace Community_Libary.API.BooksAPI
         public string OwnerUsername { get; set; }
 
         public bool Borrowed { get; set; }
+
+        public string? borrowerUsername { get; set; }
+        public List<BookReviewsDTO>? bookReviews { get; set; }
 
     }
 }

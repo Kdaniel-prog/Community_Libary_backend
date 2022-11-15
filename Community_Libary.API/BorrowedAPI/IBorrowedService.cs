@@ -11,5 +11,8 @@ namespace Community_Libary.API.BorrowedAPI
     {
         Task BorrowBookAsync(BorrowBook borrowBook);
 
+        Task DeleteBorrowBookAsync(int id);
+        Task<List<BorrowedBookDTO>> getBorrowedBooksAsync(int borrowerID);
+
     }
 }

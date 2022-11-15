@@ -1,6 +1,8 @@
+using Community_Libary.API.BookReviewAPI;
 using Community_Libary.API.BooksAPI;
 using Community_Libary.API.BorrowedAPI;
 using Community_Libary.API.UsersAPI;
+using Community_Libary.BL.BookReviewBL;
 using Community_Libary.BL.BooksBL;
 using Community_Libary.BL.BorrowedBL;
 using Community_Libary.BL.UsersBL;
@@ -26,6 +28,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IBooksService, BooksService>();
+builder.Services.AddScoped<IBookReviewsService, BookReviewsService>();
 builder.Services.AddScoped<IBorrowedService, BorrowedService>();
 
 builder.Services.AddDbContext<Community_LibaryDbContext>(
