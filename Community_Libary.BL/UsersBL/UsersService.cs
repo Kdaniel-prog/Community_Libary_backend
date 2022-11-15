@@ -36,6 +36,11 @@ namespace Community_Libary.BL.UsersBL
             {
                 throw new ConflictException(conflict.Id, nameof(registerUserDTO));
             }
+            conflict = _context.Users.FirstOrDefault(u => u.Email == registerUserDTO.Email);
+            if (conflict != null)
+            {
+                throw new ConflictException(conflict.Id, nameof(registerUserDTO));
+            }
             byte[] bytesToBeEncrypted = Encoding.UTF8.GetBytes(registerUserDTO.password);
             byte[] passwordBytes = Encoding.UTF8.GetBytes("Password");
 
@@ -145,6 +150,7 @@ namespace Community_Libary.BL.UsersBL
 
             LoginUserInfoDTO result = (LoginUserInfoDTO)userList.Where(u => u.Username.ToLower().Equals(user.username.ToLower())).Select(u => new LoginUserInfoDTO
             {
+                id = u.Id,
                 username = u.Username,
                 Email = u.Email,
                 FullName = u.FullName,

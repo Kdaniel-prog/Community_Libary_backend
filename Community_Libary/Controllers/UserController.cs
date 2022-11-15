@@ -9,7 +9,6 @@ namespace Community_Libary.WEB.Controllers
 {
     [Route("api/auth")]
     [ApiController]
-
     public class UserController : ControllerBase
     {
         private readonly IUsersService _userService;
@@ -43,11 +42,6 @@ namespace Community_Libary.WEB.Controllers
             {
                 return StatusCode(400);
             }
-        }
-        [HttpGet]
-        public async Task<ActionResult> Get()
-        {
-                return StatusCode(200);
         }
     }
 }
