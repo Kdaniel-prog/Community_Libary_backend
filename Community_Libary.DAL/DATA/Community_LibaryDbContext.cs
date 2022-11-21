@@ -20,5 +20,9 @@ namespace Community_Libary.DAL.DATA
         {
 
         }
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+
+        //}
     }
 }

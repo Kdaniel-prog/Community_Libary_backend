@@ -18,17 +18,6 @@ namespace Community_Libary.BL.UsersBL
         { 
             _context = community_LibaryDbContext;
         }
-
-        public async Task<List<LoginUserDTO>> getAllUserAsync()
-        {
-            return await _context
-                .Users
-                .Select(u => new LoginUserDTO
-                {
-                    username = u.Username ?? String.Empty,
-                })
-                .ToListAsync();
-        }
         public async Task registerUserAsync(RegisterUserDTO registerUserDTO)
         {
             var conflict = _context.Users.FirstOrDefault(u =>  u.Username == registerUserDTO.username);
@@ -51,8 +40,16 @@ namespace Community_Libary.BL.UsersBL
 
             string encryptedResult = Convert.ToBase64String(bytesEncrypted);
 
-            var newItem = new Users(registerUserDTO.username, encryptedResult, registerUserDTO.Email, registerUserDTO.FullName);
-            _context.Users.Add(newItem);
+            var newUser = new Users(registerUserDTO.username, encryptedResult, registerUserDTO.Email, registerUserDTO.FullName);
+            _context.Add(newUser);
+            UserReviews newUserRw = new UserReviews
+            {
+                Like = 0,
+                Dislike = 0,
+                User = newUser,
+                UserID = newUser.Id
+            };
+            _context.UserReviews.Add(newUserRw);
             await _context.SaveChangesAsync();
         }
 

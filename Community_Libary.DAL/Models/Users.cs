@@ -25,11 +25,6 @@ namespace Community_Libary.DAL.Models
         }
         [InverseProperty("Borrower")]
         public virtual ICollection<Borrowed> Borrowers { get; set; }
-        [InverseProperty("Reviewer")]
-        public virtual ICollection<Review> Reviewers { get; set; }
-        [InverseProperty("Reviewed")]
-        public virtual ICollection<Review> Revieweds { get; set; }
-        [InverseProperty("Reviewer")]
         public virtual ICollection<BookReviews> BookReviews { get; set; }
     }
 }

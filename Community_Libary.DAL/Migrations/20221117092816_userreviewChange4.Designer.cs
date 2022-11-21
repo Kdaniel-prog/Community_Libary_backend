@@ -4,6 +4,7 @@ using Community_Libary.DAL.DATA;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Community_Libary.DAL.Migrations
 {
     [DbContext(typeof(Community_LibaryDbContext))]
-    partial class Community_LibaryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221117092816_userreviewChange4")]
+    partial class userreviewChange4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,11 +121,16 @@ namespace Community_Libary.DAL.Migrations
                     b.Property<int?>("ReviewerId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UserReviewsId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ReviewedId");
 
                     b.HasIndex("ReviewerId");
+
+                    b.HasIndex("UserReviewsId");
 
                     b.ToTable("Reviews");
                 });
@@ -232,6 +239,10 @@ namespace Community_Libary.DAL.Migrations
                         .WithMany()
                         .HasForeignKey("ReviewerId");
 
+                    b.HasOne("Community_Libary.DAL.Models.UserReviews", null)
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserReviewsId");
+
                     b.Navigation("Reviewed");
 
                     b.Navigation("Reviewer");
@@ -253,6 +264,11 @@ namespace Community_Libary.DAL.Migrations
                     b.Navigation("BorrowedBooks");
 
                     b.Navigation("ReviewBooks");
+                });
+
+            modelBuilder.Entity("Community_Libary.DAL.Models.UserReviews", b =>
+                {
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("Community_Libary.DAL.Models.Users", b =>
