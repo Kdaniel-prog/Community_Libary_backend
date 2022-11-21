@@ -21,9 +21,28 @@ namespace Community_Libary.BL.BooksBL
 
         public async Task DeleteBookAsync(int id)
         {
-            var b = await _context.Books.FindAsync(id)
+            var b = await _context.Books
+                .Include(b => b.BorrowedBooks.Where(b => b.BookId.Equals(id)))
+                .Include(b => b.ReviewBooks.Where(b => b.BookId.Equals(id)))
+                .Where(b => b.Id.Equals(id)).FirstAsync()
                     ?? throw new ObjectNotFoundException<Books>(id);
-            _context.Books.Remove(b);
+            var borrowBooks = _context.Borrowed.Where(b => b.BookId.Equals(id)).Select(b => b);
+            var bookReviews = _context.BookReviews.Where(b => b.BookId.Equals(id)).Select(b => b);
+            _context.Remove(b);
+            if(borrowBooks != null)
+            {
+                foreach(var bwBook in borrowBooks)
+                {
+                    _context.Borrowed.Remove(bwBook);
+                }
+            }
+            if (bookReviews != null)
+            {
+                foreach (var bookRew in bookReviews)
+                {
+                    _context.BookReviews.Remove(bookRew);
+                }
+            }
             await _context.SaveChangesAsync();
         }
 

@@ -22,15 +22,20 @@ namespace Community_Libary.BL.BookReviewBL
         }
         public async Task InsertBookReviewAsync(BookReviewDTO reviewDTO)
         {
-            BookReviews bookreview = new BookReviews
+            var bookReviewCheck = await _context.BookReviews.Where(bw => bw.BookId.Equals(reviewDTO.bookID) && bw.ReviewerId.Equals(reviewDTO.reviewerID)).FirstOrDefaultAsync();
+            if(bookReviewCheck == null)
             {
-                BookReview = reviewDTO.bookReview,
-                BookId = reviewDTO.bookID,
-                ReviewerId = reviewDTO.reviewerID,
-                CreatedTimestamp = DateTime.Now,
-            };
+                BookReviews bookreview = new BookReviews
+                {
+                    BookReview = reviewDTO.bookReview,
+                    BookId = reviewDTO.bookID,
+                    ReviewerId = reviewDTO.reviewerID,
+                    CreatedTimestamp = DateTime.Now,
+                };
 
-            _context.BookReviews.Add(bookreview);
+                _context.BookReviews.Add(bookreview);
+            }
+
             _context.SaveChanges();
         }
         public async Task UpdateBookReviewAsync(BookReviewDTO book)

@@ -10,7 +10,10 @@ namespace Community_Libary.DAL.Models
     public class UserReviews
     {
         public int Id { get; set; }
-        public bool IsRecommend { get; set; }
-        public virtual Review Review { get; set; }
+        
+        public int Like { get; set; }
+        public int Dislike { get; set; }
+        public virtual Users User { get; set; }
+        public int UserID { get; set; }
     }
 }

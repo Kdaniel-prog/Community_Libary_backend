@@ -4,6 +4,7 @@ using Community_Libary.DAL.DATA;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Community_Libary.DAL.Migrations
 {
     [DbContext(typeof(Community_LibaryDbContext))]
-    partial class Community_LibaryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221117092008_userreviewChange1")]
+    partial class userreviewChange1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,18 +138,23 @@ namespace Community_Libary.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("Dislike")
+                    b.Property<int>("ReviewId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Like")
+                    b.Property<int>("ReviewedId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserID")
+                    b.Property<int>("dislike")
+                        .HasColumnType("int");
+
+                    b.Property<int>("like")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("ReviewId");
+
+                    b.HasIndex("ReviewedId");
 
                     b.ToTable("UserReviews");
                 });
@@ -225,11 +232,11 @@ namespace Community_Libary.DAL.Migrations
             modelBuilder.Entity("Community_Libary.DAL.Models.Review", b =>
                 {
                     b.HasOne("Community_Libary.DAL.Models.Users", "Reviewed")
-                        .WithMany()
+                        .WithMany("Revieweds")
                         .HasForeignKey("ReviewedId");
 
                     b.HasOne("Community_Libary.DAL.Models.Users", "Reviewer")
-                        .WithMany()
+                        .WithMany("Reviewers")
                         .HasForeignKey("ReviewerId");
 
                     b.Navigation("Reviewed");
@@ -239,13 +246,21 @@ namespace Community_Libary.DAL.Migrations
 
             modelBuilder.Entity("Community_Libary.DAL.Models.UserReviews", b =>
                 {
-                    b.HasOne("Community_Libary.DAL.Models.Users", "User")
+                    b.HasOne("Community_Libary.DAL.Models.Review", "Review")
                         .WithMany()
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("ReviewId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.HasOne("Community_Libary.DAL.Models.Users", "Reviewed")
+                        .WithMany()
+                        .HasForeignKey("ReviewedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Review");
+
+                    b.Navigation("Reviewed");
                 });
 
             modelBuilder.Entity("Community_Libary.DAL.Models.Books", b =>
@@ -260,6 +275,10 @@ namespace Community_Libary.DAL.Migrations
                     b.Navigation("BookReviews");
 
                     b.Navigation("Borrowers");
+
+                    b.Navigation("Revieweds");
+
+                    b.Navigation("Reviewers");
                 });
 #pragma warning restore 612, 618
         }

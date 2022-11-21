@@ -4,6 +4,7 @@ using Community_Libary.DAL.DATA;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Community_Libary.DAL.Migrations
 {
     [DbContext(typeof(Community_LibaryDbContext))]
-    partial class Community_LibaryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221120200538_userreviewChangextime")]
+    partial class userreviewChangextime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
