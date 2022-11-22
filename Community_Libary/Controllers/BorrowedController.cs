@@ -32,11 +32,24 @@ namespace Community_Libary.WEB.Controllers
         }
         // GET: api/borrowed/Books
         [HttpGet("Books")]
-        public async Task<ActionResult> BorrowedBooks(int borrowerID)
+        public async Task<ActionResult> BorrowedBooks(int borrowerID, int page, int size)
         {
             try
             {
-                return StatusCode(200, await _borrowedService.getBorrowedBooksAsync(borrowerID));
+                return StatusCode(200, await _borrowedService.getBorrowedBooksAsync(borrowerID, page-1, size));
+            }
+            catch
+            {
+                return StatusCode(400);
+            }
+        }
+        // GET: api/book/mybooksSize/5
+        [HttpGet("BooksSize")]
+        public async Task<ActionResult> BorrowedBooksSize(int id)
+        {
+            try
+            {
+                return StatusCode(200, await _borrowedService.getSizeAsync(id));
             }
             catch
             {

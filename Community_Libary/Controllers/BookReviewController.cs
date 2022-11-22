@@ -18,11 +18,24 @@ namespace Community_Libary.WEB.Controllers
         }
         // GET: api/bookreview/allreview
         [HttpGet("allreview")]
-        public async Task<ActionResult> BookReviews(int bookid)
+        public async Task<ActionResult> BookReviews(int bookid, int page, int size)
         {
             try
             {
-                return StatusCode(200, await _bookReviewsService.GetAllReviewForBooksAsync(bookid));
+                return StatusCode(200, await _bookReviewsService.GetAllReviewForBooksAsync(bookid, page-1, size));
+            }
+            catch
+            {
+                return StatusCode(400);
+            }
+        }
+        // GET: api/bookreview/getSize
+        [HttpGet("getSize")]
+        public async Task<ActionResult> getSize(int bookid)
+        {
+            try
+            {
+                return StatusCode(200, await _bookReviewsService.getSizeAsync(bookid));
             }
             catch
             {

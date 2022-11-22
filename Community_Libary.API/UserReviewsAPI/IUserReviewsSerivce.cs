@@ -9,7 +9,8 @@ namespace Community_Libary.API.UserReviewsAPI
 {
     public interface IUserReviewsSerivce
     {
-        Task<List<GetUsersDTO>> GetAllUserAsync(int id);
+        Task<List<GetUsersDTO>> GetAllUserAsync(int id, int page, int size);
+        Task<int> getSizeAsync(int bookid);
         Task InsertReviewAsync(ReviewUserDTO review);
         Task<OneUserDTO> GetOneUserAsync(int id);
     }

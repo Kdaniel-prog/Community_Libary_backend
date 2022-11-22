@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieCatalogApi.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,7 +47,7 @@ namespace Community_Libary.BL.BooksBL
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<AllBook>> GetBooksAsync(int UserId)
+        public async Task<List<AllBook>> GetBooksAsync(int UserId, int page, int size)
         {
             List<AllBook> listOfAvailableBooks =  await _context.Books.Include(b => b.Owner).Where(b => b.OwnerId != UserId).Select(b => new AllBook
             {
@@ -57,11 +58,11 @@ namespace Community_Libary.BL.BooksBL
                 OwnerUsername = b.Owner.Username,
                 Borrowed = _context.Borrowed.Include(bw => bw.Book).Where(bw => bw.BookId.Equals(b.Id)).First() == null ? false : true,
                 borrowerUsername = _context.Borrowed.Include(bw => bw.borrower).Where(bw => bw.BookId.Equals(b.Id)).Select(bw => bw.borrower.Username).First()
-            }).ToListAsync();
+            }).Skip(page * size).Take(size).ToListAsync();
             return listOfAvailableBooks;
         }
 
-        public async Task<List<BookDTO>> GetMyBooksAsync(int id)
+        public async Task<List<BookDTO>> GetMyBooksAsync(int id, int page, int size)
         {
             var books = await _context.Books.Include(u => u.Owner).Where(b => b.OwnerId.Equals(id)).Select(b => new BookDTO {
                 Id = b.Id,
@@ -69,9 +70,18 @@ namespace Community_Libary.BL.BooksBL
                 Title = b.Title,
                 OwnerID = b.OwnerId,
                 borrowerUsername = _context.Borrowed.Include(bw => bw.borrower).Where(bw => bw.BookId.Equals(b.Id)).Select(bw => bw.borrower.Username).First()
-            }).ToListAsync() ?? throw new ObjectNotFoundException<BookDTO>();
+            }).Skip(page * size).Take(size).ToListAsync() ?? throw new ObjectNotFoundException<BookDTO>();
             return books;
+        }
 
+        public async Task<int> getSizeAsync(int UserId)
+        {
+            return await _context.Books.Include(b => b.Owner).Where(b => b.OwnerId != UserId).CountAsync();
+        }
+
+        public async Task<int> getSizeOfMyBooksAsync(int id)
+        {
+            return await _context.Books.Include(u => u.Owner).Where(b => b.OwnerId.Equals(id)).CountAsync();
         }
 
         public async Task InsertBookAsync(AddBookDTO book)

@@ -5,6 +5,7 @@ using Community_Libary.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace Community_Libary.BL.UserReviewsBL
             _context = community_LibaryDbContext;
         }
 
-        public async Task<List<GetUsersDTO>> GetAllUserAsync(int id)
+        public async Task<List<GetUsersDTO>> GetAllUserAsync(int id, int page, int size)
         {
             var users = await _context.UserReviews.Include(u => u.User).Where(u => u.UserID != id).Select(u => new GetUsersDTO
             {
@@ -28,10 +29,13 @@ namespace Community_Libary.BL.UserReviewsBL
                 fullName = u.User.FullName,
                 like = u.Like,
                 dislike = u.Dislike
-            }).ToListAsync();
+            }).Skip(page * size).Take(size).ToListAsync();
             return users;
         }
-
+        public async Task<int> getSizeAsync(int id)
+        {
+            return await _context.UserReviews.Include(u => u.User).Where(u => u.UserID != id).CountAsync();
+        }
         public async Task<OneUserDTO> GetOneUserAsync(int id)
         {
             var users = await _context.UserReviews.Include(u => u.User).Where(u => u.UserID == id).Select(u => new OneUserDTO

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieCatalogApi.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace Community_Libary.BL.BorrowedBL
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<BorrowedBookDTO>> getBorrowedBooksAsync(int borrowerID)
+        public async Task<List<BorrowedBookDTO>> getBorrowedBooksAsync(int borrowerID, int page, int size)
         {
             List<BorrowedBookDTO> borrowedBooks = await _context.Borrowed.Include(b => b.Book).Where(b => b.BorrowerId.Equals(borrowerID)).Select(bw => new BorrowedBookDTO
             {
@@ -53,8 +54,13 @@ namespace Community_Libary.BL.BorrowedBL
                 bookReview = _context.BookReviews.Where(b => b.BookId.Equals(bw.BookId) && b.ReviewerId.Equals(borrowerID)).Select(b => b.BookReview).First(),
                 bookReviewID = _context.BookReviews.Where(b => b.BookId.Equals(bw.BookId) && b.ReviewerId.Equals(borrowerID)).Select(b => b.Id).First(),
                 borrowedReviewID = bw.Id
-            }).ToListAsync();
+            }).Skip(page * size).Take(size).ToListAsync();
             return borrowedBooks;
+        }
+
+        public async Task<int> getSizeAsync(int borrowerID)
+        {
+            return await _context.Borrowed.Include(b => b.Book).Where(b => b.BorrowerId.Equals(borrowerID)).CountAsync();
         }
     }
 }
