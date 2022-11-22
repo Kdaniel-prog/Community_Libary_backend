@@ -4,6 +4,7 @@ using Community_Libary.BL.UsersBL;
 using Community_Libary.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Community_Libary.WEB.Controllers
 {
@@ -20,11 +21,24 @@ namespace Community_Libary.WEB.Controllers
 
         // GET: api/book/mybooks/5
         [HttpGet("mybooks")]
-        public async Task<ActionResult> MyBooks(int id)
+        public async Task<ActionResult> MyBooks(int id, int page, int size)
         {
             try
             {
-                return StatusCode(200, await _bookService.GetMyBooksAsync(id));
+                return StatusCode(200, await _bookService.GetMyBooksAsync(id, page-1, size));
+            }
+            catch
+            {
+                return StatusCode(400);
+            }
+        }
+        // GET: api/book/mybooksSize/5
+        [HttpGet("mybooksSize")]
+        public async Task<ActionResult> MyBooksSize(int id)
+        {
+            try
+            {
+                return StatusCode(200, await _bookService.getSizeOfMyBooksAsync(id));
             }
             catch
             {
@@ -33,11 +47,24 @@ namespace Community_Libary.WEB.Controllers
         }
         // GET: api/book/allbook/5
         [HttpGet("allbook")]
-        public async Task<ActionResult> AllBook(int userid)
+        public async Task<ActionResult> AllBook(int userid, int page, int size)
         {
             try
             {
-                return StatusCode(200, await _bookService.GetBooksAsync(userid));
+                return StatusCode(200, await _bookService.GetBooksAsync(userid, page-1, size));
+            }
+            catch
+            {
+                return StatusCode(400);
+            }
+        }
+        // GET: api/book/mybooks/5
+        [HttpGet("getBookSize")]
+        public async Task<ActionResult> getBookSize(int userid)
+        {
+            try
+            {
+                return StatusCode(200, await _bookService.getSizeAsync(userid));
             }
             catch
             {

@@ -12,6 +12,7 @@ namespace Community_Libary.API.BookReviewAPI
         Task InsertBookReviewAsync(BookReviewDTO review);
         Task UpdateBookReviewAsync(BookReviewDTO book);
         Task DeleteBookReviewAsync(int id);
-        Task<List<AllBookReviewsDTO>> GetAllReviewForBooksAsync(int bookid);
+        Task<List<AllBookReviewsDTO>> GetAllReviewForBooksAsync(int bookid, int page, int size);
+        Task<int> getSizeAsync(int bookid);
     }
 }

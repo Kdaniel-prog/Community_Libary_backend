@@ -10,9 +10,8 @@ namespace Community_Libary.API.BorrowedAPI
     public interface IBorrowedService
     {
         Task BorrowBookAsync(BorrowBook borrowBook);
-
         Task DeleteBorrowBookAsync(int id);
-        Task<List<BorrowedBookDTO>> getBorrowedBooksAsync(int borrowerID);
-
+        Task<List<BorrowedBookDTO>> getBorrowedBooksAsync(int borrowerID, int page, int size);
+        Task<int> getSizeAsync(int borrowerID);
     }
 }

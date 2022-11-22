@@ -19,11 +19,24 @@ namespace Community_Libary.WEB.Controllers
 
         // GET: api/userReviews/allUsers
         [HttpGet("allUsers")]
-        public async Task<ActionResult> getAllUsers(int id)
+        public async Task<ActionResult> getAllUsers(int id, int page, int size)
         {
             try
             {
-                return StatusCode(200, await _userReviewsSerivce.GetAllUserAsync(id));
+                return StatusCode(200, await _userReviewsSerivce.GetAllUserAsync(id, page-1, size));
+            }
+            catch
+            {
+                return StatusCode(400);
+            }
+        }
+        // GET: api/userReviews/allUsers
+        [HttpGet("allUsersSize")]
+        public async Task<ActionResult> getallUsersSize(int id)
+        {
+            try
+            {
+                return StatusCode(200, await _userReviewsSerivce.getSizeAsync(id));
             }
             catch
             {
