@@ -2,14 +2,15 @@
 using Community_Libary.API.UsersAPI;
 using Community_Libary.BL.UsersBL;
 using Community_Libary.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Community_Libary.WEB.Controllers
 {
-    [Route("api/book")]
     [ApiController]
+    [Route("api/book")]
     public class BookController : Controller
     {
         private readonly IBooksService _bookService;
@@ -71,7 +72,7 @@ namespace Community_Libary.WEB.Controllers
                 return StatusCode(400);
             }
         }
-
+        [Authorize]
         // POST:  api/book/addBook
         [HttpPost("addBook")]
         public async Task<ActionResult> AddBook(AddBookDTO book)
