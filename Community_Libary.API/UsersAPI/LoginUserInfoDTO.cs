@@ -19,5 +19,7 @@ namespace Community_Libary.API.UsersAPI
 
         [Required(ErrorMessage = "FullName is required")]
         public string FullName { get; set; }
+
+        public string accessToken { get; set; }
     }
 }

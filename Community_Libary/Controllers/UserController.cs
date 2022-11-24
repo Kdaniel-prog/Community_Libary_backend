@@ -4,6 +4,7 @@ using System.Text.Json.Nodes;
 using Newtonsoft.Json.Linq;
 using Community_Libary.BL.UsersBL;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Community_Libary.WEB.Controllers
 {
@@ -31,6 +32,8 @@ namespace Community_Libary.WEB.Controllers
                 return StatusCode(419);
             }
         }
+
+        [AllowAnonymous]
         [HttpPost("signin")]
         public async Task<ActionResult> PostLogin(LoginUserDTO user)
         {
