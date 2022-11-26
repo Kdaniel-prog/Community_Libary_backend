@@ -2,10 +2,12 @@
 using Community_Libary.API.UserReviewsAPI;
 using Community_Libary.API.UsersAPI;
 using Community_Libary.BL.BooksBL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Community_Libary.WEB.Controllers
 {
+    [Authorize]
     [Route("api/userReviews")]
     [ApiController]
     public class UserReviewsController : Controller

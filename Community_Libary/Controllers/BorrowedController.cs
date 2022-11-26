@@ -1,10 +1,12 @@
 ﻿using Community_Libary.API.BooksAPI;
 using Community_Libary.API.BorrowedAPI;
 using Community_Libary.BL.BooksBL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Community_Libary.WEB.Controllers
 {
+    [Authorize]
     [Route("api/borrowed")]
     [ApiController]
     public class BorrowedController : Controller

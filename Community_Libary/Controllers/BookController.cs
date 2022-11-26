@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Community_Libary.WEB.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/book")]
     public class BookController : Controller
@@ -46,7 +47,9 @@ namespace Community_Libary.WEB.Controllers
                 return StatusCode(400);
             }
         }
+
         // GET: api/book/allbook/5
+
         [HttpGet("allbook")]
         public async Task<ActionResult> AllBook(int userid, int page, int size)
         {
@@ -72,7 +75,6 @@ namespace Community_Libary.WEB.Controllers
                 return StatusCode(400);
             }
         }
-        [Authorize]
         // POST:  api/book/addBook
         [HttpPost("addBook")]
         public async Task<ActionResult> AddBook(AddBookDTO book)

@@ -19,6 +19,7 @@ namespace Community_Libary.WEB.Controllers
             _userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpPost("signup")]
         public async Task<ActionResult> PostRegister(RegisterUserDTO user)
         {
